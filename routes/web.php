@@ -49,3 +49,5 @@ Route::get('habilidades', 'SkillController@index')
 
 Route::get('saludo/{name}/{nickname?}', 'WelcomeUserController');
 
+Route::get('usuarios/eliminar/{id}', 'UserController@restore')->name('users.restore');
+

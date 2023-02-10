@@ -95,6 +95,21 @@ class UserController extends Controller
         return redirect()->route('users');
     }
 
+    public function restore($id)
+    {
+        $user_profile = UserProfile::withTrashed()->where('id', '=', $id)->first();
+        $user = User::withTrashed()->where('id', '=', $id)->first();
+
+
+        $user_profile->restore();
+        $user->restore();
+
+        $user->profile()->update($user_profile->getAttributes());
+
+        return redirect()->route('users.index');
+    }
+
+
     /*public function trashed(Sortable $sortable)
     {
         $users = User::onlyTrashed()
