@@ -47,6 +47,7 @@
                 <option value="">Selecciona una opción...</option>
                 @foreach($professions as $profession)
                     <option value="{{ $profession->id }}" {{ old('profession_id', $user->profile->profession_id) == $profession->id ? ' selected' : '' }}>{{ $profession->title }}</option>
+
                 @endforeach
             </select>
         </div>

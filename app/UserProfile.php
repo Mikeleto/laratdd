@@ -15,10 +15,16 @@ class UserProfile extends Model
 
     public function profession()
     {
+
         return $this->belongsTo(Profession::class)
+
             ->withDefault([
-                'title' => '(Sin profesion)',
+                'title' => '(Sin profesion)' ,
             ]);
+        $request->validate([
+            'profession_select' => 'required_without:profession_text',
+            'profession_text' => 'required_without:profession_select'
+        ]);
     }
 
     public function restore()

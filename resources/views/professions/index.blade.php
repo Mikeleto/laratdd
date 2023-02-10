@@ -15,8 +15,11 @@
             <th scope="col">Perfiles</th>
             <th scope="col">Acciones</th>
         </tr>
+
         </thead>
+
         <tbody>
+
         @foreach($professions as $profession)
             <tr>
                 <th scope="row">{{ $profession->id }}</th>
