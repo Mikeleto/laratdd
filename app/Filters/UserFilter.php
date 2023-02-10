@@ -26,6 +26,7 @@ class UserFilter extends QueryFilter
             'from' => 'date_format:d/m/Y',
             'to' => 'date_format:d/m/Y',
             'order' => [new SortableColumn(['first_name', 'email', 'date', 'login'])],
+            'team' => 'in:with_team,without_team',
         ];
     }
 
@@ -79,6 +80,17 @@ class UserFilter extends QueryFilter
         [$column, $direction] = Sortable::info($value);
 
         $query->orderBy($this->getColumnName($column), $direction);
+    }
+
+    public function team($query, $team)
+    {
+        if ($team === 'with_team') {
+            $query->has('team');
+        } elseif ($team === 'without_team') {
+            $query->doesntHave('team');
+        }
+
+        return $query;
     }
 
 }

@@ -147,4 +147,44 @@ class FilterUsersTest extends TestCase
             ->notContains($newestUser)
             ->notContains($newUser);
     }
+
+    public function filter_users_team()
+    {
+
+        $team = factory(Team::class)->create([
+            'id' => '1',
+            'name'=> 'Lowe Group',
+        ]);
+
+        $userWithTeam = factory(User::class)->create([
+            'team_id' => $team->id
+        ]);
+        $userWithoutTeam = factory(User::class)->create();
+        $response = $this->get('usuarios?team=with_team');
+        $response->assertViewCollection('users')
+            ->contains($userWithTeam)
+            ->notContains($userWithoutTeam);
+
+
+    }
+
+    public function filter_users_for_team()
+    {
+
+        $team = factory(Team::class)->create([
+            'id' => '1',
+            'name'=> 'Lowe Group',
+        ]);
+
+        $userWithTeam = factory(User::class)->create([
+            'team_id' => $team->id
+        ]);
+
+        $userWithoutTeam = factory(User::class)->create();
+
+        $response = $this->get('usuarios?team=without_team');
+        $response->assertViewCollection('users')
+            ->contains($userWithoutTeam)
+            ->notContains($userWithTeam);
+    }
 }
