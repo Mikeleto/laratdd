@@ -252,6 +252,20 @@ class UpdateUsersTest extends TestCase
     }
 
     /** @test  */
+    public function the_twitter_field_is_optional()
+    {
+        $user = factory(User::class)->create();
+
+        $this->from('usuarios/' . $user->id . '/editar')
+            ->put('usuarios/' . $user->id, $this->withData([
+                'first_name' => 'Miguel Martinez',
+                'twitter' => ''
+            ]))->assertRedirect('usuarios/' . $user->id);
+
+        $this->assertDatabaseHas('users', [
+            'first_name' => 'Miguel Martinez',
+        ]);
+    }
     function the_state_must_be_valid()
     {
         $this->withExceptionHandling();
@@ -266,4 +280,63 @@ class UpdateUsersTest extends TestCase
 
         $this->assertDatabaseMissing('users', ['first_name' => 'Pepe']);
     }
+
+    public function the_twitter_is_valid()
+    {
+
+
+        $user = factory(User::class)->create();
+
+        $this->from('usuarios/' . $user->id . '/editar')
+            ->put('usuarios/' . $user->id, $this->withData([
+                'twitter' => 'miguel'
+            ]))->assertRedirect('usuarios/' . $user->id . '/editar')
+            ->assertSessionHasErrors(['twitter' => 'El campo de twitter debe ser una url ']);
+
+        $this->assertEquals(1, User::count());
+        $this->handleValidationExceptions();
+    }
+
+    public function the_bio_is_required()
+    {
+
+
+        $user = factory(User::class)->create();
+
+        $this->from('usuarios/' . $user->id . '/editar')
+            ->put('usuarios/' . $user->id, $this->withData([
+                'bio' => ''
+            ]))->assertRedirect('usuarios/' . $user->id . '/editar')
+            ->assertSessionHasErrors(['bio' => 'El campo bio debe ser obligatorio']);
+
+        $this->assertEquals(1, User::count());
+        $this->handleValidationExceptions();
+    }
+
+    /** @test */
+    public function the_twitter_must_exist()
+    {
+
+
+        $user = factory(User::class)->create();
+
+        $this->from('usuarios/' . $user->id . '/editar')
+            ->put('usuarios/' . $user->id, [
+                'first_name' => 'Pepe',
+                'last_name' => 'Pérez',
+                'email' => 'pepe@mail.es',
+                'password' => '123456',
+                'profession_id' => '',
+                'bio' => 'Programador de Laravel y Vue.js',
+                'role' => 'user',
+                'state' => 'active',
+            ])->assertRedirect('usuarios/' . $user->id . '/editar')
+            ->assertSessionHasErrors(['twitter' => 'El campo de twitter debe existir']);
+
+        $this->assertEquals(1, User::count());
+        $this->handleValidationExceptions();
+    }
+
+    /** @test */
+
 }

@@ -72,4 +72,14 @@ class UpdateUserRequest extends FormRequest
 
         $user->skills()->sync($this->skills ?? []);
     }
+
+
+    public function messages()
+    {
+        return [
+            'bio.required' => 'El campo de la biografia debe ser obligatorio',
+            'twitter.present' => 'El campo de twitter debe existir',
+            'twitter.url' => 'El campo de twitter debe ser una url '
+        ];
+    }
 }
